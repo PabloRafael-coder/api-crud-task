@@ -1,21 +1,37 @@
 import http from 'node:http';
-import database from './database.js';
+import { randomUUID } from 'node:crypto'
+import { Database } from './database.js';
+import { json } from './middlewares/json.js';
+
+const database = new Database()
 
 const server = http.createServer(async (req, res) => {
     const { method, url } = req;
 
+    await json(req, res)
+
+    if (method === 'GET' && url === '/tasks') {
+        const user = database.select('tasks')
+
+        return res.end(JSON.stringify(user))
+    }
+
     if (method === 'POST' && url === '/tasks') {
 
-        const buffers = [];
+        const { title, description, completed_at, created_at, update_at } = req.body
 
-        for await (const chunk of req) {
-            buffers.push(chunk);
+        const newTask = {
+            id: randomUUID(),
+            title,
+            description,
+            completed_at,
+            created_at,
+            update_at
         }
 
-        const body = Buffer.concat(buffers).toString()
+        database.insert('tasks', newTask)
 
-
-
+        res.end(JSON.stringify(database.select('tasks')))
     }
 });
 
