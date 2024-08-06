@@ -1,6 +1,12 @@
+export class Database {
 
-class Database {
-    database = {}
+    database = {};
+
+    select(table) {
+        const data = this.database[table] ?? [];
+
+        return data
+    }
 
     insert(table, data) {
         if (Array.isArray(this.database[table])) {
@@ -8,8 +14,7 @@ class Database {
         } else {
             this.database[table] = [data]
         }
+
+        return data;
     }
-
 }
-
-export default new Database();
