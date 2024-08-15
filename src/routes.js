@@ -1,6 +1,7 @@
 
 import { Database } from './database.js';
 import { randomUUID } from 'node:crypto'
+import { pathRegex } from './utils/path-regex.js';
 
 const database = new Database()
 
@@ -8,7 +9,7 @@ export const routes =
     [
         {
             method: 'GET',
-            path: '/tasks',
+            path: pathRegex('/tasks'),
             handleRoute: function (req, res) {
                 const user = database.select('tasks')
                 return res.end(JSON.stringify(user))
@@ -16,10 +17,10 @@ export const routes =
         },
         {
             method: 'POST',
-            path: '/tasks',
+            path: pathRegex('/tasks'),
             handleRoute: function (req, res) {
                 const { title, description, completed_at, created_at, update_at } = req.body
-
+                console.log(req)
                 const newTask = {
                     id: randomUUID(),
                     title,
@@ -35,10 +36,10 @@ export const routes =
             }
         },
         {
-            method: 'PUT',
-            path: '/tasks:id',
+            method: 'DELETE',
+            path: pathRegex('/tasks/:id'),
             handleRoute: function (req, res) {
-
+                const { id } = req.params
             }
         },
     ]
