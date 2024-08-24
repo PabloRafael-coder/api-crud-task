@@ -1,7 +1,7 @@
 
 import { Database } from './database.js';
 import { randomUUID } from 'node:crypto'
-import { pathRegex } from './utils/path-regex.js';
+import { buildUrlParams } from './utils/buildUrlParams.js';
 
 const database = new Database()
 
@@ -9,7 +9,7 @@ export const routes =
     [
         {
             method: 'GET',
-            path: pathRegex('/tasks'),
+            path: buildUrlParams('/tasks'),
             handleRoute: (req, res) => {
                 const user = database.select('tasks')
                 return res.end(JSON.stringify(user))
@@ -17,7 +17,7 @@ export const routes =
         },
         {
             method: 'POST',
-            path: pathRegex('/tasks'),
+            path: buildUrlParams('/tasks'),
             handleRoute: (req, res) => {
                 const { title, description, completed_at, created_at, update_at } = req.body
                 const newTask = {
@@ -35,9 +35,33 @@ export const routes =
             }
         },
         {
-            method: 'DELETE',
-            path: pathRegex('/tasks/:id'),
+            method: 'PUT',
+            path: buildUrlParams('/tasks/:id'),
             handleRoute: (req, res) => {
+                const { id } = req.params
+                const { title, description, completed_at, created_at, update_at } = req.body
+
+                const data = {
+                    id,
+                    title,
+                    description,
+                    completed_at,
+                    created_at,
+                    update_at
+                }
+
+                database.update('tasks', id, data)
+
+                res.end('')
+            }
+        },
+        {
+            method: 'DELETE',
+            path: buildUrlParams('/tasks/:id'),
+            handleRoute: (req, res) => {
+                const { id } = req.params
+                database.delete('tasks', id)
+
                 res.end('')
             }
         },
