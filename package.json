@@ -14,5 +14,8 @@
     "email": "pabloofael@gmail.com",
     "url": "https://github.com/PabloRafael-coder"
   },
-  "license": "ISC"
+  "license": "ISC",
+  "dependencies": {
+    "csv": "^6.3.10"
+  }
 }
