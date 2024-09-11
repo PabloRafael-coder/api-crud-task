@@ -19,14 +19,15 @@ export const routes =
             method: 'POST',
             path: buildUrlParams('/tasks'),
             handleRoute: (req, res) => {
-                const { title, description, completed_at, created_at, update_at } = req.body
+                const { title, description } = req.body
+
                 const newTask = {
                     id: randomUUID(),
                     title,
                     description,
-                    completed_at,
-                    created_at,
-                    update_at
+                    completed_at: null,
+                    created_atL: Date(),
+                    update_at: Date()
                 }
 
                 database.insert('tasks', newTask)
