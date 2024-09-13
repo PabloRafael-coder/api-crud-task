@@ -38,7 +38,8 @@ export class Database {
         const returnIndexArray = this.#database[table].findIndex(row => row.id === id)
 
         if (returnIndexArray > -1) {
-            this.#database[table][returnIndexArray] = data
+            const taskToUpdate = this.#database[table][returnIndexArray]
+            this.#database[table][returnIndexArray] = { ...data, created_at: taskToUpdate.created_at }
         }
     }
 
