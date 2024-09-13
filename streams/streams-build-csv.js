@@ -4,14 +4,14 @@ import { parse } from 'csv'
 const filePathCsv = new URL('tasks.csv', import.meta.url)
 const tasks = [];
 
-const content = fs.createReadStream(filePathCsv, "utf-8")
+const csvStream = fs.createReadStream(filePathCsv, "utf-8")
     .pipe(parse({
         relax_column_count: true,
         skip_empty_lines: true,
         columns: true,
     }))
 
-for await (const record of content) {
+for await (const record of csvStream) {
     tasks.push(record)
 }
 
@@ -22,6 +22,6 @@ tasks.forEach((tasks) => {
             title: tasks.title,
             description: tasks.description
         })
-    }).then().then(data => console.log(data))
+    })
 })
 
