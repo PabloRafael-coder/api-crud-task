@@ -12,7 +12,9 @@ export const routes =
             path: buildUrlParams('/tasks'),
             handleRoute: (req, res) => {
                 const user = database.select('tasks')
+
                 return res.end(JSON.stringify(user))
+
             }
         },
         {
@@ -26,7 +28,7 @@ export const routes =
                     title,
                     description,
                     completed_at: null,
-                    created_atL: Date(),
+                    created_at: Date(),
                     update_at: Date()
                 }
 
@@ -40,16 +42,18 @@ export const routes =
             path: buildUrlParams('/tasks/:id'),
             handleRoute: (req, res) => {
                 const { id } = req.params
-                const { title, description, completed_at, created_at, update_at } = req.body
+                const { title, description, created_at } = req.body
 
                 const data = {
                     id,
                     title,
                     description,
-                    completed_at,
+                    completed_at: null,
                     created_at,
-                    update_at
+                    update_at: Date()
                 }
+
+                console.log(data.id)
 
                 database.update('tasks', id, data)
 
