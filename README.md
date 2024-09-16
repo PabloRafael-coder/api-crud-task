@@ -20,11 +20,11 @@ Streams: Implementação de streams para importar grandes volumes de dados a par
 
 
 ## Endpoints
-GET /tasks :Retorna todas as tasks.<br>
-POST /tasks/:id :Cria um nova task.<br>
-PUT /tasks/:id :Atualiza uma task <br>
-PATCH /tasks/:id/complete :Atualiza um item exclusivamente da task.<br>
-DELETE /tasks/:id Remove um item pelo ID.<br>
+GET /tasks -> Retorna todas as tasks.<br>
+POST /tasks/:id -> Cria um nova task.<br>
+PUT /tasks/:id -> Atualiza uma task <br>
+PATCH /tasks/:id/complete -> Atualiza um item exclusivamente da task.<br>
+DELETE /tasks/:id -> Remove um item pelo ID.<br>
 
 Contribuição
 Fique à vontade para abrir issues e pull requests.
