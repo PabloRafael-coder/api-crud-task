@@ -3,7 +3,6 @@ import fs from 'node:fs/promises'
 const databasePath = new URL('../db.json', import.meta.url)
 export class Database {
     #database = {};
-
     constructor() {
         fs.readFile(databasePath, 'utf-8').then(data => {
             this.#database = JSON.parse(data)
@@ -45,9 +44,25 @@ export class Database {
 
     delete(table, id) {
         const returnIndexArray = this.#database[table].findIndex(row => row.id === id)
+        console.log(returnIndexArray)
 
         if (returnIndexArray > -1) {
             this.#database[table].splice(returnIndexArray, 1)
+            this.#persist()
+            return { status: 'success', message: 'task deleted' }
+        } else {
+            return { status: 'error', message: 'task ID not found' }
         }
+    }
+
+    updateCompleted_at(table, id, completed) {
+        const returnIndexArray = this.#database[table].findIndex(row => row.id === id)
+
+        const data = this.#database[table][returnIndexArray]
+
+        if (returnIndexArray > -1) {
+            this.#database[table][returnIndexArray] = { ...data, completed_at: completed }
+        }
+
     }
 }

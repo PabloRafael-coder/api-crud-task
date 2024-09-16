@@ -21,20 +21,26 @@ export const routes =
             method: 'POST',
             path: buildUrlParams('/tasks'),
             handleRoute: (req, res) => {
+
                 const { title, description } = req.body
 
-                const newTask = {
-                    id: randomUUID(),
-                    title,
-                    description,
-                    completed_at: null,
-                    created_at: Date(),
-                    update_at: Date()
+                try {
+
+                    const newTask = {
+                        id: randomUUID(),
+                        title,
+                        description,
+                        completed_at: null,
+                        created_at: Date(),
+                        update_at: Date()
+                    }
+
+                    database.insert('tasks', newTask)
+                    res.writeHead(201).end(JSON.stringify(database.select('tasks')))
+
+                } catch (error) {
+                    res.writeHead(404).end(String(error))
                 }
-
-                database.insert('tasks', newTask)
-
-                res.end(JSON.stringify(database.select('tasks')))
             }
         },
         {
@@ -42,22 +48,24 @@ export const routes =
             path: buildUrlParams('/tasks/:id'),
             handleRoute: (req, res) => {
                 const { id } = req.params
-                const { title, description, created_at } = req.body
+                const { title, description } = req.body
 
-                const data = {
-                    id,
-                    title,
-                    description,
-                    completed_at: null,
-                    created_at,
-                    update_at: Date()
+                try {
+
+                    const data = {
+                        id,
+                        title,
+                        description,
+                        completed_at: null,
+                        update_at: Date()
+                    }
+
+                    database.update('tasks', id, data)
+
+                    res.end("Updated data")
+                } catch (error) {
+                    res.writeHead(404).end(String(error))
                 }
-
-                console.log(data.id)
-
-                database.update('tasks', id, data)
-
-                res.end('')
             }
         },
         {
@@ -65,9 +73,30 @@ export const routes =
             path: buildUrlParams('/tasks/:id'),
             handleRoute: (req, res) => {
                 const { id } = req.params
-                database.delete('tasks', id)
 
-                res.end('')
+                try {
+                    const returnDeleted = database.delete('tasks', id)
+
+                    if (returnDeleted.status === 'success') {
+                        res.writeHead(204).end();
+                    } else {
+                        res.writeHead(404).end(String(returnDeleted.message))
+                    }
+                } catch (error) {
+                    res.writeHead(404).end(String(error))
+                }
             }
         },
+        {
+            method: 'PATCH',
+            path: buildUrlParams('/tasks/:id/complete'),
+            handleRoute: (req, res) => {
+                const { id } = req.params
+                const { completed_at } = req.body
+
+                database.updateCompleted_at('tasks', id, completed_at)
+                res.end('')
+            }
+        }
+
     ]
